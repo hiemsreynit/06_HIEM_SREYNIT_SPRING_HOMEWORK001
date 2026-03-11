@@ -1,4 +1,5 @@
-package com.system.ticketing.model.dto;
+package com.system.ticketing.model.dto.response;
+
 
 import com.system.ticketing.model.entity.Tickets;
 import lombok.AllArgsConstructor;
@@ -6,15 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponseListTicket {
+public class ApiResponseTicket {
     private Boolean success;
     private String message;
     private String status;
-    private List<Tickets> payload;
+    private Tickets payload;
     private Instant timeStamp;
 }

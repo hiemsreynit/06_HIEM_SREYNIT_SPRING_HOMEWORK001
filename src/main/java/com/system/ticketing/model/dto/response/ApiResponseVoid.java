@@ -1,20 +1,14 @@
 package com.system.ticketing.model.dto.response;
 
-import com.system.ticketing.model.dto.ApiResponseTicket;
-import com.system.ticketing.model.entity.Tickets;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ApiResponseVoid {
-    private Boolean success;
-    private String message;
-    private String status;
-    private Tickets payload;
-    private String timeStamp;
+    public static final String RETRIEVE_SUCCESS = "Tickets retrieved successfully";
+    public static final String UPDATE_SUCCESS = "Tickets updated successfully";
+    public static final String DELETE_SUCCESS = "Tickets deleted successfully";
+    public static final String CREATE_SUCCESS = "Tickets created successfully";
+    public static final String NOT_FOUND = "No tickets found with the given ID.";
+
+    public static final String STATUS_OK = "200 OK";
+    public static final String STATUS_CREATED = "201 CREATED";
+    public static final String STATUS_NOT_FOUND = "404 NOT FOUND";
 }
