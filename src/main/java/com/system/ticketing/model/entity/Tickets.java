@@ -1,0 +1,23 @@
+package com.system.ticketing.model.entity;
+
+import com.system.ticketing.model.dto.TicketStatus;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Tickets {
+    private Long ticketId;
+    private String passengerName;
+    private LocalDate travelDate;
+    private String sourceStation;
+    private String destination;
+    private Double price;
+    private Boolean paymentStatus;
+    private TicketStatus ticketStatus;
+    private String seatNumber;
+}
