@@ -10,6 +10,7 @@ import com.system.ticketing.model.entity.Tickets;
 import com.system.ticketing.model.dto.request.TicketsRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -45,6 +46,11 @@ public class TicketController {
     ));
 
     private final AtomicLong TICKET_ID = new AtomicLong(9L);
+    private final LocalValidatorFactoryBean defaultValidator;
+
+    public TicketController(LocalValidatorFactoryBean defaultValidator) {
+        this.defaultValidator = defaultValidator;
+    }
 
 
     @GetMapping
@@ -70,7 +76,7 @@ public class TicketController {
 
 
     @GetMapping("{ticket-id}")
-    public ResponseEntity<ApiResponseTicket> getById9(@PathVariable("ticket-id") Long ticketId) {
+    public ResponseEntity<ApiResponseTicket> getById(@PathVariable("ticket-id") Long ticketId) {
         for (Tickets ticket : TICKETS_LIST) {
             if (ticket.getTicketId().equals(ticketId)) {
                 return ResponseEntity.ok(new ApiResponseTicket(
@@ -223,16 +229,47 @@ public class TicketController {
                 if (id.equals(ticket.getTicketId())) {
                     ticket.setPaymentStatus(updateRequest.getPaymentStatus());
                     responseTickets.add(ticket);
+                    return ResponseEntity.ok(new ApiResponseListTicket(
+                            true,
+                            ApiResponseVoid.UPDATE_SUCCESS,
+                            ApiResponseVoid.STATUS_OK,
+                            responseTickets,
+                            Instant.now()));
                 }
             }
         }
-        return ResponseEntity.ok(new ApiResponseListTicket(
-                true,
-                ApiResponseVoid.UPDATE_SUCCESS,
-                ApiResponseVoid.STATUS_OK,
-                responseTickets,
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseListTicket(
+                false,
+                ApiResponseVoid.UPDATE_FAILED,
+                ApiResponseVoid.STATUS_NOT_FOUND,
+                null,
                 Instant.now()));
     }
 
+
+    @GetMapping("/filter")
+    public ResponseEntity<ApiResponseTicket> filter(
+            @RequestParam(defaultValue = "BOOKED", required = false) TicketStatus status,
+            @RequestParam(required = false) LocalDate date) {
+        for (Tickets ticket : TICKETS_LIST) {
+            if (ticket.getTicketStatus().equals(status) && ticket.getTravelDate().equals(date)) {
+                ApiResponseTicket response = new ApiResponseTicket(
+                        true,
+                        ApiResponseVoid.RETRIEVE_SUCCESS,
+                        ApiResponseVoid.STATUS_OK,
+                        ticket,
+                        Instant.now()
+                );
+                return ResponseEntity.ok(response);
+            }
+        }
+        return ResponseEntity.ok(new ApiResponseTicket(
+                true,
+                ApiResponseVoid.FILTER_FAILED,
+                ApiResponseVoid.STATUS_OK,
+                null,
+                Instant.now()
+        ));
+    }
 }
 
